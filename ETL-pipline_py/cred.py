@@ -4,12 +4,12 @@ import mysql.connector
 from mysql.connector import errorcode
 
 #Define DB name to use or create if it does not exist
-DB_NAME = 'sample'
+DB_NAME = 'employees'
 
-## Dict variable to store a the table loc for employees DB
+## Dict variable to store the list of DB tables and its attributes
 TABLES = {}
 
-#Table name and the DDL query to create its table attribute as KEY=>VALUE pair
+#Table name and the DDL query to create its table attribute stored as KEY=>VALUE pair
 TABLES['employees'] = (
     "CREATE TABLE `employees` ("
     "  `emp_no` int(11) NOT NULL AUTO_INCREMENT,"
