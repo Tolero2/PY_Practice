@@ -91,10 +91,10 @@ config = {
 
 ## Two ways to use the dictionary parameters in config
 #1 using the wildcard pointer for dictionary variable -**-config-
-#cnx = mysql.connector.connect(**config)
+cnx = mysql.connector.connect(**config)
 
 #2 using the dictionary variable directly as arguments in k=>value pair
-cnx = mysql.connector.connect(host = config["host"] ,user = config["user"] ,passwd = config["password"] )
+#cnx = mysql.connector.connect(host = config["host"] ,user = config["user"] ,passwd = config["password"] )
 cursor = cnx.cursor()
 
 #try-catch function to create DB if the DB_NAME does not exist
