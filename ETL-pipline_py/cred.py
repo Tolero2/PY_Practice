@@ -97,7 +97,7 @@ cursor = cnx.cursor()
 #cnx = mysql.connector.connect(host = config["host"] ,user = config["user"] ,passwd = config["password"] )
 #cursor = cnx.cursor()
 
-##Function to create DB if the value of DB_NAME does not exist
+##Function to create DB if the value of DB_NAME does not exist.
 def create_database(cursor):
     try:
         cursor.execute(
@@ -106,7 +106,7 @@ def create_database(cursor):
         print("Failed creating database: {}".format(err))
         exit(1)
 
-##Function to init the use Db with DB_NAME on the MYSQL server connection
+##Function to init the use Db with DB_NAME on the MYSQL server connection.
 def use_DBNAME ():
     #try-catch and initiate the SQL sever to USE the DB_NAME or create a new DB using the create_database function if not DB_NAME does not exist
     try:
@@ -122,7 +122,7 @@ def use_DBNAME ():
             print(err)
             exit(1)
 
-##Function to create Tables in the DB_NAME using the dict variable of TABLES
+##Function to create Tables in the DB_NAME using the dict variable of TABLES.
 def create_tables(TABLES):
     #use the specified DBNAME or create a DB using the DBNAME if it doesn't exist.
     use_DBNAME ()
@@ -146,7 +146,9 @@ def create_tables(TABLES):
         else:
             print("{} table has been created successfully.".format(table_name.upper()))
 
-
+#intiate create_table function to start script process.
 create_tables(TABLES)
+
+#Close the DB connection after use to save runtime consumption
 cursor.close()
 cnx.close()
