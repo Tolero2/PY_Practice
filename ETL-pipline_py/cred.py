@@ -4,7 +4,7 @@ import mysql.connector
 from mysql.connector import errorcode
 
 #Define DB name to use or create if it does not exist
-DB_NAME = 'sample'
+DB_NAME = 'employees'
 
 ## Dict variable to store the list of DB tables and its attributes
 TABLES = {}
@@ -12,7 +12,7 @@ TABLES = {}
 #Table name and the DDL query to create its table attribute stored as KEY=>VALUE pair
 TABLES['employees'] = (
     "CREATE TABLE `employees` ("
-    "  `emp_no` int(11) NOT NULL AUTO_INCREMENT,"
+    "  `emp_no` int NOT NULL AUTO_INCREMENT,"
     "  `birth_date` date NOT NULL,"
     "  `first_name` varchar(14) NOT NULL,"
     "  `last_name` varchar(16) NOT NULL,"
@@ -30,8 +30,8 @@ TABLES['departments'] = (
 
 TABLES['salaries'] = (
     "CREATE TABLE `salaries` ("
-    "  `emp_no` int(11) NOT NULL,"
-    "  `salary` int(11) NOT NULL,"
+    "  `emp_no` int NOT NULL,"
+    "  `salary` int NOT NULL,"
     "  `from_date` date NOT NULL,"
     "  `to_date` date NOT NULL,"
     "  PRIMARY KEY (`emp_no`,`from_date`), KEY `emp_no` (`emp_no`),"
@@ -41,7 +41,7 @@ TABLES['salaries'] = (
 
 TABLES['dept_emp'] = (
     "CREATE TABLE `dept_emp` ("
-    "  `emp_no` int(11) NOT NULL,"
+    "  `emp_no` int NOT NULL,"
     "  `dept_no` char(4) NOT NULL,"
     "  `from_date` date NOT NULL,"
     "  `to_date` date NOT NULL,"
@@ -55,7 +55,7 @@ TABLES['dept_emp'] = (
 
 TABLES['dept_manager'] = (
     "  CREATE TABLE `dept_manager` ("
-    "  `emp_no` int(11) NOT NULL,"
+    "  `emp_no` int NOT NULL,"
     "  `dept_no` char(4) NOT NULL,"
     "  `from_date` date NOT NULL,"
     "  `to_date` date NOT NULL,"
@@ -70,7 +70,7 @@ TABLES['dept_manager'] = (
 
 TABLES['titles'] = (
     "CREATE TABLE `titles` ("
-    "  `emp_no` int(11) NOT NULL,"
+    "  `emp_no` int NOT NULL,"
     "  `title` varchar(50) NOT NULL,"
     "  `from_date` date NOT NULL,"
     "  `to_date` date DEFAULT NULL,"
