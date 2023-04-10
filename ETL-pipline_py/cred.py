@@ -4,7 +4,7 @@ import mysql.connector
 from mysql.connector import errorcode
 
 #Define DB name to use or create if it does not exist
-DB_NAME = 'employees'
+DB_NAME = 'sample'
 
 ## Dict variable to store the list of DB tables and its attributes
 TABLES = {}
@@ -92,12 +92,12 @@ config = {
 ## Two ways to use the dictionary parameters in config
 #1 using the wildcard pointer for dictionary variable -**-config-
 cnx = mysql.connector.connect(**config)
-
+cursor = cnx.cursor()
 #2 using the dictionary variable directly as arguments in k=>value pair
 #cnx = mysql.connector.connect(host = config["host"] ,user = config["user"] ,passwd = config["password"] )
-cursor = cnx.cursor()
+#cursor = cnx.cursor()
 
-#try-catch function to create DB if the DB_NAME does not exist
+#create_database function to create DB if the value of DB_NAME does not exist
 def create_database(cursor):
     try:
         cursor.execute(
@@ -106,7 +106,7 @@ def create_database(cursor):
         print("Failed creating database: {}".format(err))
         exit(1)
 
-#try-catch and initiate the SQL sever to use the DB_NAME
+#try-catch and initiate the SQL sever to USE the DB_NAME or create a new DB using the create_database function if not DB_NAME does not exist
 try:
     cursor.execute("USE {}".format(DB_NAME))
 except mysql.connector.Error as err:
@@ -120,6 +120,45 @@ except mysql.connector.Error as err:
         exit(1)
 
 
+##Iterator of the Dict variable previously created as (TABLES :dict type)
+#loop through dict list from table to read each object
+for table_name in TABLES:
+    table_attributes = TABLES[table_name]
+
+#use try-catch funct to log the execute process as successful or failed.
+    try:
+        print("Creating {} table".format(table_name.upper()))
+        #execute the query from each object in the dict using the Mysql.connector.connect.cursor()
+        cursor.execute (table_attributes)
+    except mysql.connector.Error as e:
+        if e.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+             print("{} table already exists.".format(table_name.upper()))
+        else:
+            print("Cannot create table: {}".format(e))
+            exit(1)
+    else:
+        print("{} table has been created successfully".format(table_name.upper()))
+
+cursor.close()
+cnx.close()
+
+
+
+# for table_name in TABLES:
+#     table_description = TABLES[table_name]
+#     try:
+#         print("Creating table {}: ".format(table_name), end='')
+#         cursor.execute(table_description)
+#     except mysql.connector.Error as err:
+#         if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+#             print("already exists.")
+#         else:
+#             print(err.msg)
+#     else:
+#         print("OK")
+
+# cursor.close()
+# cnx.close()
 # Connection = "conn: mysql-connector dbname: sampleData1 ; host: 127.0.0.1:3306"
 # user= "root"
 # password = "root1234"
