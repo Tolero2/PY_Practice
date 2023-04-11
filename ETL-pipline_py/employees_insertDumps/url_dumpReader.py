@@ -9,7 +9,10 @@ for queryFiles in osPath:
     filePath= f"./ETL-pipline_py/employees_insertDumps/{queryFiles}"
     openFile = open(filePath, "r")
     readFile = openFile.read()
-    print(str(readFile))
-    openFile.close()
 
-#df = pd.DataFrame()"r"
+    for table_name in TABLES:
+        try:
+            print("Inserting {} data into database...".format(table_name))
+        print(str(readFile))
+openFile.close()
+
