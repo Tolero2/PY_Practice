@@ -13,7 +13,7 @@ config = {
 cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
-DB_NAME = "sample10"
+DB_NAME = "sample12"
 
 def use_DBNAME ():
     #try-catch and initiate the SQL sever to USE the DB_NAME or create a new DB using the create_database function if not DB_NAME does not exist
@@ -21,9 +21,8 @@ def use_DBNAME ():
         cursor.execute("USE {}".format(DB_NAME))
     except mysql.connector.Error as err:
         print("error on DB_NAME: {}".format(err))
-    else:
-        print("closing DB connection")
-    
+
+
 def filesPathList ():
         #get a list of all file name from specified path using the listdir funct.
         currentDir = os.curdir #print current directory (essentially a dot)
@@ -41,18 +40,19 @@ table_name= "departments"
 
 InsertsToTables = filesPathList()
 for tableInsert in InsertsToTables:
-        tablestr = f"{table_name}.txt"
-        capsTable_name = table_name.capitalize()
-        if (tableInsert == tablestr):
-                filePath= f"./ETL-pipeline_py/employeesDB_insertDumps/{tablestr}"
+        tableStr = f"{table_name}.txt"
+        capsTable_name = table_name.upper()
+        if (tableInsert == tableStr):
+                filePath= f"./ETL-pipeline_py/employeesDB_insertDumps/{tableStr}"
                 openFile = open(filePath, "r")
                 readFile = openFile.read()
                 try:
-                        print("Inserting {} data into database...".format(capsTable_name))
+                        print("Inserting {} dataset into database...".format(capsTable_name))
                         cursor.execute(readFile)
                 except mysql.connector.Error as err:
-                        print("error inserting data into {} table".format(err))
+                        print("Error inserting data into {} table".format(err))
                 else: print("Successfully imported {} data".format(capsTable_name))
+                print("Closing {} database connection".format(DB_NAME.upper()))
 openFile.close()
 
 
