@@ -3,10 +3,10 @@ import pandas as pd
 import json
 
 #get a list of all file name from dumpfolder funct.
-osPath= os.listdir(path ="./ETL-pipline_py/employees_insertDumps")
+osPath= os.listdir(path ="./ETL-pipline_py/employeesDB_insertDumps")
 
 for queryFiles in osPath:
-    filePath= f"./ETL-pipline_py/employees_insertDumps/{queryFiles}"
+    filePath= f"./ETL-pipline_py/employeesDB_insertDumps/{queryFiles}"
     openFile = open(filePath, "r")
     readFile = openFile.read()
 
