@@ -13,6 +13,9 @@ for queryFiles in osPath:
     for table_name in TABLES:
         try:
             print("Inserting {} data into database...".format(table_name))
+            cursor.execute(readFile)
+        except MYSQL.connector.error as err:
+            print("error inserting data into {} table".format(table_name))
         print(str(readFile))
 openFile.close()
 
