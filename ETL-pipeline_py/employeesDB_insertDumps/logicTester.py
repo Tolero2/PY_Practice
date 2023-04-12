@@ -19,10 +19,8 @@ for table in table_name:
     for keyOrder in insertOrder:
         if (f"{insertOrder[keyOrder]}.txt" == table):
             tableName[keyOrder] = f"{insertOrder                     [keyOrder]}.txt"
-
-print(tableName)
 #return the list of table names in the insert order preference as a list variable
-counter = 1
+counter = 1 # counter to help reorder the dict values using key matching()
 orderedTableName = []
 for i in range(1, len(insertOrder)+1, 1):
     orderedTableName.append(tableName[counter])
