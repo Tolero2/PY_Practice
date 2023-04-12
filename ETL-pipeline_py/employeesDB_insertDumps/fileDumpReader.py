@@ -1,4 +1,5 @@
 import os
+from typing import Counter
 import pandas as pd
 import json
 import mysql.connector
@@ -41,7 +42,7 @@ def tableInsertOrder (table_name):
        ##A LOGIC is defined to handle the insert of the dataset into the database in a particular order due to the define constraints on the tables (e.g. the foreign key ON DELETE constraints between table )
          
          #preferred order to handle DB tables constraints
-        insertOrder = []
+        insertOrder = {}
         insertOrder[1] = "employees"
         insertOrder[2] = "departments"
         insertOrder[3] = "dept_manager"
@@ -50,7 +51,7 @@ def tableInsertOrder (table_name):
         insertOrder[6] = "titles"
 
         #relist table_name properly
-        tableName =[]
+        tableName ={}
 
         for i in range (1, max(insertOrder)+ 1, 1) :
                 counter = 1
@@ -67,7 +68,8 @@ InsertsToTables = filesPathList()
 for tableInsert in InsertsToTables:
         fileName = f"{table_name}.txt"
         capsTable_name = table_name.upper()
-        if (tableInsert == fileName, table_name == ):
+        counter = 1
+        if (tableInsert == fileName, table_name == "employees"):
                 filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
                 openFile = open(filePath, "r")
                 readFile = openFile.read()
