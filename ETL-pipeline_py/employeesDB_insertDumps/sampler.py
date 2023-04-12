@@ -13,10 +13,11 @@ for i in range (0, len(table_name) + 1, 1) :
     # for inOrder in insertOrder:
     print(table_name[counter])
     for i in table_name:
-        if (f"{insertOrder[counter]}.txt" == i):
+        indexOrder= insertOrder[counter]
+        if (f"{indexOrder}.txt" == i):
                 print( insertOrder[counter])
-                tableName.append(insertOrder[counter])
-                                    
+                tableName.append(insertOrder)
+
         counter += 1
 
 print(tableName)
