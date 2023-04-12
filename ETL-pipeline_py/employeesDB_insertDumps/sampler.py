@@ -5,16 +5,17 @@ insertOrder = ["employees", "departments",
     "dept_manager", "salaries", "dept_emp", "titles"]
 
        # relist table_name properly
-tableName = []*len(table_name)
+
 
 for i in range (0, len(table_name) + 1, 1) :
+    tableName = [] *len(table_name)
     counter = 0
     # for inOrder in insertOrder:
-        
+    print(table_name[counter])
     for i in table_name:
         if (f"{insertOrder[counter]}.txt" == i):
-                                    print( insertOrder[counter])
-                                    tableName = insertOrder[counter]
+                print( insertOrder[counter])
+                tableName.append(insertOrder[counter])
                                     
         counter += 1
 
