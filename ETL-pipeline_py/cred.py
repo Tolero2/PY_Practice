@@ -24,7 +24,7 @@ cursor = cnx.cursor()
 
 
 ##Define DB name to use or create if it does not exist
-DB_NAME = 'Sample15'
+DB_NAME = 'Sample17'
 
 ## Dict variable to store the list of DB tables and its attributes
 TABLES = {}
@@ -32,7 +32,7 @@ TABLES = {}
     #Table name and the DDL query as value - to create its table attribute stored as KEY=>VALUE pair
 TABLES['employees'] = (
     "CREATE TABLE `employees` ("
-    "  `emp_no` int NOT NULL AUTO_INCREMENT,"
+    "  `emp_no` int NOT NULL,"
     "  `birth_date` date NOT NULL,"
     "  `first_name` varchar(14) NOT NULL,"
     "  `last_name` varchar(16) NOT NULL,"
@@ -42,11 +42,7 @@ TABLES['employees'] = (
     ") ENGINE=InnoDB")
 
 TABLES['departments'] = (
-    "CREATE TABLE `departments` ("
-    "  `dept_no` char(4) NOT NULL,"
-    "  `dept_name` varchar(40) NOT NULL,"
-    "  PRIMARY KEY (`dept_no`), UNIQUE KEY `dept_name` (`dept_name`)"
-    ") ENGINE=InnoDB")
+    "CREATE TABLE `departments` (`dept_no` char(4) NOT NULL,`dept_name` varchar(40) NOT NULL,PRIMARY KEY (`dept_no`), UNIQUE KEY `dept_name` (`dept_name`)) ENGINE=InnoDB")
 
 TABLES['salaries'] = (
     "CREATE TABLE `salaries` ("
@@ -147,7 +143,7 @@ def create_tables(TABLES):
     #use the specified DBNAME or create a DB using the DBNAME if it doesn't exist.
     use_DBNAME ()
     ##Iterator of the Dict variable previously created as (TABLES :dict type)
-    #loop through dict list from table to read each object
+    #loop through dict list from table name to read each object
     for table_name in TABLES:
         table_attributes = TABLES[table_name]
 
