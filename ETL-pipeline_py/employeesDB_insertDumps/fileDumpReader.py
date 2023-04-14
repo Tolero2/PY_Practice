@@ -59,7 +59,7 @@ def tableInsertOrder ():
         for insertTable in insertFiles:
                 for keyOrder in insertOrder:
                         if (f"{insertOrder[keyOrder]}.txt" == insertTable):
-                                 tableName[keyOrder] = f"{insertOrder [keyOrder]}.txt"
+                                 tableName[keyOrder] = f"{insertOrder [keyOrder]}"
 
         #return the list of table names in the insert order preference as a list variable
         orderedTableName = []
@@ -103,7 +103,7 @@ else:
                 #fileName = f"{table_name}.txt"
                 capsTable_name = tableInsert.upper() # split txt
                 counter = 1
-                if (tableInsert == fileName, table_name == "employees"):
+                if (tableInsert == fileName):
                         filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
                         openFile = open(filePath, "r")
                         readFile = openFile.read()
