@@ -23,7 +23,7 @@ def use_DBNAME ():
     except mysql.connector.Error as err:
         print("error on DB_NAME: {}".format(err))
 
-
+## list out all the names of the metadata files in the given directory.
 def filesPathList ():
         #get a list of all file name from specified path using the listdir funct.
         currentDir = os.curdir #print current directory (essentially a dot)
@@ -36,10 +36,12 @@ def filesPathList ():
         return DirFileNames
 
 use_DBNAME()
-table_name= "dept_emp"
-
-def tableInsertOrder (table_name):
+##Define the a new logic to read files names in a preferred order and preferred files.
+def tableInsertOrder ():
        ##A LOGIC is defined to handle the insert of the dataset into the database in a particular order due to the define constraints on the tables (e.g. the foreign key ON DELETE constraints between table )
+
+        #store the list of the insert data file names from directory
+        insertFiles = filesPathList()
 
         #preferred order to handle DB tables constraints
         #insert order preference/ all table values defined in this Dict must exist in the list of file names from the directory in use.
@@ -54,14 +56,14 @@ def tableInsertOrder (table_name):
         # serialize tableName to hold table_name list in the insert order preference
         tableName = {}
 
-        for table in table_name:
+        for insertTable in insertFiles:
                 for keyOrder in insertOrder:
-                        if (f"{insertOrder[keyOrder]}.txt" == table):
+                        if (f"{insertOrder[keyOrder]}.txt" == insertTable):
                                  tableName[keyOrder] = f"{insertOrder [keyOrder]}.txt"
 
         #return the list of table names in the insert order preference as a list variable
-        counter = 1 # counter to help reorder the dict values using key matching(n)
         orderedTableName = []
+        counter = 1 # counter to help reorder the dict values using key matching(n)
         for i in range(1, len(insertOrder)+1, 1):
                 orderedTableName.append(tableName[counter])
                 counter = counter + 1
@@ -69,10 +71,9 @@ def tableInsertOrder (table_name):
         return orderedTableName
 
 
-print(filesPathList())
-InsertsToTables = filesPathList()
+InsertsToTables =  tableInsertOrder ()
 for tableInsert in InsertsToTables:
-        fileName = f"{table_name}.txt"
+        #fileName = f"{table_name}.txt"
         capsTable_name = table_name.upper()
         counter = 1
         if (tableInsert == fileName, table_name == "employees"):
