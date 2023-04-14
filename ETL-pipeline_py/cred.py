@@ -3,13 +3,33 @@ from __future__ import print_function
 import mysql.connector
 from mysql.connector import errorcode
 
-#Define DB name to use or create if it does not exist
+
+##create a dict variable to hold YOUR DB connection string
+config = {
+  'user': 'root',
+  'password': 'root1234',
+  'host': '127.0.0.1',
+  #'raise_on_warnings': True #FOR DEVELOPER'S USE ONLY
+}
+
+
+##MYSQL connector CONSTRUCTOR (connect()) to initiate the sever connection and database connection as well
+## Two ways to use the dictionary parameters in config
+#1 using the wildcard pointer for dictionary variable -**-config-
+cnx = mysql.connector.connect(**config)
+cursor = cnx.cursor()
+#2 using the dictionary variable directly as arguments in k=>value pair
+#cnx = mysql.connector.connect(host = config["host"] ,user = config["user"] ,passwd = config["password"] )
+#cursor = cnx.cursor()
+
+
+##Define DB name to use or create if it does not exist
 DB_NAME = 'Sample15'
 
 ## Dict variable to store the list of DB tables and its attributes
 TABLES = {}
 
-#Table name and the DDL query as value - to create its table attribute stored as KEY=>VALUE pair
+    #Table name and the DDL query as value - to create its table attribute stored as KEY=>VALUE pair
 TABLES['employees'] = (
     "CREATE TABLE `employees` ("
     "  `emp_no` int NOT NULL AUTO_INCREMENT,"
@@ -146,7 +166,7 @@ def create_tables(TABLES):
         else:
             print("{} table has been created successfully.".format(table_name.upper()))
 
-#intiate create_table function to start script process.
+#inItiate create_table function to start script process.
 create_tables(TABLES)
 
 #Close the DB connection after use to save runtime consumption

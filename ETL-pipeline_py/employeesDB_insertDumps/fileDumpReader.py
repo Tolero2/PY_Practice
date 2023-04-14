@@ -58,7 +58,7 @@ def tableInsertOrder (table_name):
                 for keyOrder in insertOrder:
                         if (f"{insertOrder[keyOrder]}.txt" == table):
                                  tableName[keyOrder] = f"{insertOrder [keyOrder]}.txt"
-        
+
         #return the list of table names in the insert order preference as a list variable
         counter = 1 # counter to help reorder the dict values using key matching(n)
         orderedTableName = []
