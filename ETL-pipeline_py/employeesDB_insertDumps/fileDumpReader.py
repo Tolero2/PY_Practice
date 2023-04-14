@@ -35,7 +35,6 @@ def filesPathList ():
                 DirFileNames.append((p))
 
         return DirFileNames
-print(filesPathList())
 
 use_DBNAME()
 ##Define the a new logic to read files names in a preferred order and preferred files.
@@ -64,19 +63,14 @@ def tableInsertOrder ():
                                  tableName[keyOrder] = f"{insertOrder [keyOrder]}"
 
         #return the list of table names in the insert order preference as a list variable
-        orderedTableName = {}
+        orderedTableName = []
         counter = 1 # counter to help reorder the dict values using key matching(n)
         for i in range(0, len(insertOrder), 1):
-                orderedTableName[counter] = tableName[counter]
+                orderedTableName.append(tableName[counter])
                 counter = counter + 1
         return orderedTableName
 
-
-
-
 print(tableInsertOrder())
-
-
 
 
 ##choose whether you want to insert a single table file data or all table files data. can be specified too by reducing the number of files insert order
