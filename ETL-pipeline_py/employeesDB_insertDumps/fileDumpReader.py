@@ -1,3 +1,4 @@
+from ast import Or
 import os
 from typing import Counter
 import pandas as pd
@@ -14,7 +15,7 @@ config = {
 cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
-DB_NAME = "sample12"
+DB_NAME = "sample17"
 
 def use_DBNAME ():
     #try-catch and initiate the SQL sever to USE the DB_NAME or create a new DB using the create_database function if not DB_NAME does not exist
@@ -27,13 +28,14 @@ def use_DBNAME ():
 def filesPathList ():
         #get a list of all file name from specified path using the listdir funct.
         currentDir = os.curdir #print current directory (essentially a dot)
-        osPath= os.listdir(path =f"{currentDir}")#/ETL-pipeline_py/employeesDB_insertDumps")
+        osPath= os.listdir(path =f"{currentDir}/ETL-pipeline_py/employeesDB_insertDumps")
         DirFileNames=[]
         for p in osPath:
                 #osPathList= list(p)
                 DirFileNames.append((p))
 
         return DirFileNames
+print(filesPathList())
 
 use_DBNAME()
 ##Define the a new logic to read files names in a preferred order and preferred files.
@@ -49,7 +51,7 @@ def tableInsertOrder ():
         insertOrder[1] = "employees"
         insertOrder[2] = "dept_manager"
         insertOrder[3] = "departments"
-        insertOrder[4] = "salaries"
+        insertOrder[4] = "salaries1"
         insertOrder[5] = "departments"
         insertOrder[6] = "titles"
 
@@ -62,62 +64,92 @@ def tableInsertOrder ():
                                  tableName[keyOrder] = f"{insertOrder [keyOrder]}"
 
         #return the list of table names in the insert order preference as a list variable
-        orderedTableName = []
+        orderedTableName = {}
         counter = 1 # counter to help reorder the dict values using key matching(n)
-        for i in range(1, len(insertOrder)+1, 1):
-                orderedTableName.append(tableName[counter])
+        for i in range(0, len(insertOrder), 1):
+                orderedTableName[counter] = tableName[counter]
                 counter = counter + 1
-
         return orderedTableName
+
+
+
+
+print(tableInsertOrder())
+
+
 
 
 ##choose whether you want to insert a single table file data or all table files data. can be specified too by reducing the number of files insert order
 
-#single table? Y or N
-singleTable = ""
-if (singleTable == "Y"):
-        table_name = " "
-        InsertsToTables =  tableInsertOrder ()
-        for tableInsert in InsertsToTables:
-                fileName = f"{table_name}.txt"
-                capsTable_name = table_name.upper()
-                counter = 1
-                if (tableInsert == fileName):
-                        filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
-                        openFile = open(filePath, "r")
-                        readFile = openFile.read()
-                        try:
-                                print("Inserting {} dataset into database...".format(capsTable_name))
-                                cursor.execute(readFile)
-                        except mysql.connector.Error as err:
-                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
-                        else: print("Successfully imported {} data".format(capsTable_name))
-                        print("Closing {} database connection".format(DB_NAME.upper()))
-        openFile.close()
+# #single table? Y or N
+# singleTable = ""
+# if (singleTable == "Y"):
+#         table_name = " "
+#         InsertsToTables =  tableInsertOrder ()
+#         for tableInsert in InsertsToTables:
+#                 fileName = f"{table_name}.txt"
+#                 capsTable_name = table_name.upper()
+#                 counter = 1
+#                 if (tableInsert == fileName):
+#                         filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
+#                         openFile = open(filePath, "r")
+#                         readFile = openFile.read()
+#                         try:
+#                                 print("Inserting {} dataset into database...".format(capsTable_name))
+#                                 cursor.execute(readFile)
+#                         except mysql.connector.Error as err:
+#                                 print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+#                         else: print("Successfully imported {} data".format(capsTable_name))
+#                         print("Closing {} database connection".format(DB_NAME.upper()))
+#         openFile.close()
 
-else:
+# else:
 
-        #Run the insert query function to populate respective table with its corr file data
-        InsertsToTables =  tableInsertOrder ()
-        for tableInsert in InsertsToTables:
-                fileName = f"{tableInsert}.txt"
-                counter = 1
-                if (tableInsert == fileName):
-                        capsTable_name = str(tableInsert).upper()
-                        filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
-                        openFile = open(filePath, "r")
-                        readFile = openFile.read()
-                        try:
-                                print("Inserting {} dataset into database...".format(capsTable_name))
-                                cursor.execute(readFile)
-                        except mysql.connector.Error as err:
-                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
-                        else: print("Successfully imported {} data".format(capsTable_name))
-                        print("Closing {} database connection".format(DB_NAME.upper()))
-        openFile.close()
-
-
+#         #Run the insert query function to populate respective table with its corr file data
+#         InsertsToTables =  tableInsertOrder ()
+#         for tableInsert in InsertsToTables:
+#                 fileName = f"{tableInsert}.txt"
+#                 counter = 1
+#                 if (tableInsert == fileName):
+#                         capsTable_name = str(tableInsert).upper()
+#                         filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
+#                         openFile = open(filePath, "r")
+#                         readFile = openFile.read()
+#                         try:
+#                                 print("Inserting {} dataset into database...".format(capsTable_name))
+#                                 cursor.execute(readFile)
+#                         except mysql.connector.Error as err:
+#                                 print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+#                         else: print("Successfully imported {} data".format(capsTable_name))
+#                         print("Closing {} database connection".format(DB_NAME.upper()))
+#         openFile.close()
 
 
-cursor.close()
-cnx.close()
+
+
+# cursor.close()
+# cnx.close()
+
+# InsertsToTables =  tableInsertOrder ()
+# for tableInsert in InsertsToTables:
+#                 fileName = f"{tableInsert}.txt"
+#                 counter = 1
+#                 if (tableInsert == fileName):
+#                         capsTable_name = str(tableInsert).upper()
+#                         filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
+#                         openFile = open(filePath, "r")
+#                         readFile = openFile.read()
+#                         try:
+#                                 print("Inserting {} dataset into database...".format(capsTable_name))
+#                                 cursor.execute(readFile)
+#                         except mysql.connector.Error as err:
+#                                 print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+#                         else: print("Successfully imported {} data".format(capsTable_name))
+#                         print("Closing {} database connection".format(DB_NAME.upper()))
+# openFile.close()
+
+
+
+
+# cursor.close()
+# cnx.close()
