@@ -100,10 +100,10 @@ else:
         #Run the insert query function to populate respective table with its corr file data
         InsertsToTables =  tableInsertOrder ()
         for tableInsert in InsertsToTables:
-                #fileName = f"{table_name}.txt"
-                capsTable_name = tableInsert.upper() # split txt
+                fileName = f"{tableInsert}.txt"
                 counter = 1
                 if (tableInsert == fileName):
+                        capsTable_name = str(tableInsert).upper()
                         filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
                         openFile = open(filePath, "r")
                         readFile = openFile.read()
