@@ -71,23 +71,50 @@ def tableInsertOrder ():
         return orderedTableName
 
 
-InsertsToTables =  tableInsertOrder ()
-for tableInsert in InsertsToTables:
-        #fileName = f"{table_name}.txt"
-        capsTable_name = table_name.upper()
-        counter = 1
-        if (tableInsert == fileName, table_name == "employees"):
-                filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
-                openFile = open(filePath, "r")
-                readFile = openFile.read()
-                try:
-                        print("Inserting {} dataset into database...".format(capsTable_name))
-                        cursor.execute(readFile)
-                except mysql.connector.Error as err:
-                        print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
-                else: print("Successfully imported {} data".format(capsTable_name))
-                print("Closing {} database connection".format(DB_NAME.upper()))
-openFile.close()
+##choose whether you want to insert a single table file data or all table files data. can be specified too by reducing the number of files insert order
+
+#single table? Y or N
+singleTable = ""
+if (singleTable == "Y"):
+        table_name = " "
+        InsertsToTables =  tableInsertOrder ()
+        for tableInsert in InsertsToTables:
+                fileName = f"{table_name}.txt"
+                capsTable_name = table_name.upper()
+                counter = 1
+                if (tableInsert == fileName):
+                        filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
+                        openFile = open(filePath, "r")
+                        readFile = openFile.read()
+                        try:
+                                print("Inserting {} dataset into database...".format(capsTable_name))
+                                cursor.execute(readFile)
+                        except mysql.connector.Error as err:
+                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                        else: print("Successfully imported {} data".format(capsTable_name))
+                        print("Closing {} database connection".format(DB_NAME.upper()))
+        openFile.close()
+
+else:
+
+        #Run the insert query function to populate respective table with its corr file data
+        InsertsToTables =  tableInsertOrder ()
+        for tableInsert in InsertsToTables:
+                #fileName = f"{table_name}.txt"
+                capsTable_name = tableInsert.upper() # split txt
+                counter = 1
+                if (tableInsert == fileName, table_name == "employees"):
+                        filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
+                        openFile = open(filePath, "r")
+                        readFile = openFile.read()
+                        try:
+                                print("Inserting {} dataset into database...".format(capsTable_name))
+                                cursor.execute(readFile)
+                        except mysql.connector.Error as err:
+                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                        else: print("Successfully imported {} data".format(capsTable_name))
+                        print("Closing {} database connection".format(DB_NAME.upper()))
+        openFile.close()
 
 
 
