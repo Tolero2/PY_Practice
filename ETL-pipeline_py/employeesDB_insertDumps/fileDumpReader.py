@@ -1,6 +1,5 @@
 from ast import Or
 import os
-from typing import Counter
 import pandas as pd
 import json
 import mysql.connector
