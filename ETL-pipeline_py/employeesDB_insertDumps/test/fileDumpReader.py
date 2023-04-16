@@ -159,7 +159,7 @@ for tableInsert in InsertsToTables:
                         fileValue= "".join(readFile)
                         try:
                                         print("Inserting {} dataset into database...".format(capsTable_name))
-                                        query = "INSERT INTO `employees` VALUES {};".format(fileValue)
+                                        query = "LOAD DATA LOCAL INFILE '{value}' INTO TABLE {tableIn};".format(value =fileValue, tableIn=tableInsert)
                                         cursor.execute (query)
                         except mysql.connector.Error as err:
                                         print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
