@@ -1,4 +1,5 @@
 import os
+from numpy import true_divide
 import pandas as pd
 import json
 import mysql.connector
@@ -132,27 +133,41 @@ print(tableInsertOrder())
 # cursor.close()
 # cnx.close()
 
+dirPath = dirPathName
 InsertsToTables =  tableInsertOrder ()
 for tableInsert in InsertsToTables:
                 fileName = f"{tableInsert}.txt"
-                print(fileName)
+                print(tableInsert)
                 counter = 1
-                if (tableInsert == fileName):
-                        capsTable_name = tableInsert.upper()
+                #if (tableInsert == fileName):
+                capsTable_name = tableInsert.upper()
+                if (dirPath == ""):
                         filePath= fileName #f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
-                        # with open(filePath, "rt") as openFile:
-                        #         readFile = openFile.read()
+                                # with open(filePath, "rt") as openFile:
+                                #         readFile = openFile.read()
                         openFile = open(filePath, "r")
                         readFile = openFile.read()
                         try:
-                                print("Inserting {} dataset into database...".format(capsTable_name))
-                                cursor.execute(readFile)
+                                        print("Inserting {} dataset into database...".format(capsTable_name))
+                                        cursor.execute(readFile)
                         except mysql.connector.Error as err:
-                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                                        print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
                         else: print("Successfully imported {} data".format(capsTable_name))
-                        print("Closing {} database connection".format(DB_NAME.upper()))
                         openFile.close()
-
+                else:
+                        filePath= f"{dirPath}/{fileName}"
+                                # with open(filePath, "rt") as openFile:
+                                #         readFile = openFile.read()
+                        openFile = open(filePath, "r")
+                        readFile = str(openFile.read())
+                        try:
+                                        print("Inserting {} dataset into database...".format(capsTable_name))
+                                        cursor.execute(readFile, multi= True)
+                        except mysql.connector.Error as err:
+                                        print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                        else: print("Successfully imported {} data".format(capsTable_name))
+                        openFile.close()
+print("Closing {} database connection".format(DB_NAME.upper()))
 
 
 
