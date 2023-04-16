@@ -16,7 +16,7 @@ cursor = cnx.cursor()
 
 DB_NAME = "sample17"
 
-dirPathName = ""#"/ETL-pipeline_py/employeesDB_insertDumps"  #for your directory value if specified outside current directory
+dirPathName = "./ETL-pipeline_py/employeesDB_insertDumps"  #for your directory value if specified outside current directory/ if your script is in the same directory as your files then you can put empty string quotes(""), your current directory will be used.
 
 def use_DBNAME ():
     #try-catch and initiate the SQL sever to USE the DB_NAME or create a new DB using the create_database function if not DB_NAME does not exist
@@ -31,7 +31,7 @@ def filesPathList ():
         dirPath = dirPathName
         currentDir = os.curdir #print current directory (essentially a dot)
         DirFileNames=[]
-        if (dirPath == "" // " "):
+        if (dirPath == ""):
                 osPath= os.listdir(path =f"{currentDir}")
                 for p in osPath:
                         if (p.endswith(".txt")): #check for intended file name(in this case only files ending with text(.txt) format)
@@ -56,10 +56,10 @@ def tableInsertOrder ():
         #insert order preference/ all table values defined in this Dict must exist in the list of file names from the directory in use.
         insertOrder = {}
         insertOrder[1] = "employees"
-        insertOrder[2] = "dept_manager"
-        insertOrder[3] = "departments"
+        insertOrder[2] = "departments"
+        insertOrder[3] = "dept_manager"
         insertOrder[4] = "salaries1"
-        insertOrder[5] = "departments"
+        insertOrder[5] = "dept_emp"
         insertOrder[6] = "titles"
 
         # serialize tableName to hold table_name list in the insert order preference
