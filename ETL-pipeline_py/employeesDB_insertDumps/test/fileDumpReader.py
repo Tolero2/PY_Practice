@@ -171,7 +171,7 @@ for tableInsert in InsertsToTables:
                         for list in chunkList:
                                 try:
                                                         print("Inserting {} dataset into database...".format(capsTable_name))
-                                                        query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val=list )
+                                                        query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val=str(list) )
                                                         cursor.execute (query)
                                 except mysql.connector.Error as err:
                                                         print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
