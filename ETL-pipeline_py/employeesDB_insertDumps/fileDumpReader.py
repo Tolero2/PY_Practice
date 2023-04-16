@@ -17,7 +17,7 @@ cursor = cnx.cursor()
 
 DB_NAME = "sample17"
 
-dirPathName = "./ETL-pipeline_py/employeesDB_insertDumps"  #for your directory value if specified outside current directory/ if your script is in the same directory as your files then you can put empty string quotes(""), your current directory will be used.
+dirPathName = "" #"./ETL-pipeline_py/employeesDB_insertDumps"  #for your directory value if specified outside current directory/ if your script is in the same directory as your files then you can put empty string quotes(""), your current directory will be used.
 
 def use_DBNAME ():
     #try-catch and initiate the SQL sever to USE the DB_NAME or create a new DB using the create_database function if not DB_NAME does not exist
@@ -138,7 +138,6 @@ InsertsToTables =  tableInsertOrder ()
 for tableInsert in InsertsToTables:
                 fileName = f"{tableInsert}.txt"
                 print(tableInsert)
-                counter = 1
                 #if (tableInsert == fileName):
                 capsTable_name = tableInsert.upper()
                 if (dirPath == ""):
@@ -149,7 +148,7 @@ for tableInsert in InsertsToTables:
                         readFile = openFile.read()
                         try:
                                         print("Inserting {} dataset into database...".format(capsTable_name))
-                                        cursor.execute(readFile)
+                                        cursor.execute(readFile, multi=True)
                         except mysql.connector.Error as err:
                                         print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
                         else: print("Successfully imported {} data".format(capsTable_name))
@@ -159,7 +158,7 @@ for tableInsert in InsertsToTables:
                                 # with open(filePath, "rt") as openFile:
                                 #         readFile = openFile.read()
                         openFile = open(filePath, "r")
-                        readFile = str(openFile.read())
+                        readFile = openFile.read()
                         try:
                                         print("Inserting {} dataset into database...".format(capsTable_name))
                                         cursor.execute(readFile, multi= True)
@@ -167,9 +166,10 @@ for tableInsert in InsertsToTables:
                                         print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
                         else: print("Successfully imported {} data".format(capsTable_name))
                         openFile.close()
+
+
+
 print("Closing {} database connection".format(DB_NAME.upper()))
-
-
-
+cnx.commit()
 cursor.close()
 cnx.close()
