@@ -15,7 +15,7 @@ cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
 
-DB_NAME = "Sample3"
+DB_NAME = "Sample20"
 
 dirPathName = "./ETL-pipeline_py/employeesDB_insertDumps/test"  #for your directory value if specified outside current directory/ if your script is in the same directory as your files then you can put empty string quotes(""), your current directory will be used.
 
@@ -143,11 +143,11 @@ for tableInsert in InsertsToTables:
                         filePath= fileName
                         openFile = open(filePath, "r")
                         readFile = f"{(openFile.read())}".split("\n")
-                        values =" ".join(readFile)
-                        print(values)
+                        fileValues =" ".join(readFile)
+                        print(fileValues)
                         try:
                                         print("Inserting {} dataset into database...".format(capsTable_name))
-                                        query = "INSERT INTO `EMPLOYEES` VALUES {val};".format(table= tableInsert, val=values )
+                                        query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val=fileValues )
                                         cursor.execute (query)
                         except mysql.connector.Error as err:
                                         print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
@@ -155,16 +155,22 @@ for tableInsert in InsertsToTables:
                 else:
                         filePath= f"{dirPath}/{fileName}"
                         openFile = open(filePath, "r")
-                        readFile = openFile.read()
-                        fileValue= "".join(readFile)
+                        readFile = openFile.read().split(",\n")
+                        chunkCount=(round(len(readFile)/50000))
+                        print(chunkCount)
+                        rowsCount= 0
+                        for i in range(0, chunkCount, 1):
+                                valueChunk = readFile[rowsCount : rowsCount + 50000]
+                                print(len(valueChunk))
+                                fileValues= ",".join(valueChunk)
                         try:
-                                        print("Inserting {} dataset into database...".format(capsTable_name))
-                                        query = "LOAD DATA LOCAL INFILE '{value}' INTO TABLE {tableIn};".format(value =fileValue, tableIn=tableInsert)
-                                        cursor.execute (query)
+                                                print("Inserting {} dataset into database...".format(capsTable_name))
+                                                query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val=fileValues )
+                                                cursor.execute (query)
                         except mysql.connector.Error as err:
-                                        print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
                         else: print("Successfully imported {} data".format(capsTable_name))
-
+                        rowsCount = rowsCount+50000
 
 openFile.close()
 print("Closing {} database connection".format(DB_NAME.upper()))
