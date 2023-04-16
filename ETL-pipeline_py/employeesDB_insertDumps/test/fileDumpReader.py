@@ -138,7 +138,6 @@ InsertsToTables =  tableInsertOrder ()
 for tableInsert in InsertsToTables:
                 fileName = f"{tableInsert}.txt"
                 print(tableInsert)
-                #if (tableInsert == fileName):
                 capsTable_name = tableInsert.upper()
                 if (dirPath == ""):
                         filePath= fileName
@@ -153,11 +152,10 @@ for tableInsert in InsertsToTables:
                         except mysql.connector.Error as err:
                                         print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
                         else: print("Successfully imported {} data".format(capsTable_name))
-                        openFile.close()
                 else:
                         filePath= f"{dirPath}/{fileName}"
                         openFile = open(filePath, "r")
-                        readFile = openFile.read()#.split("\n")
+                        readFile = openFile.read()
                         fileValue= "".join(readFile)
                         try:
                                         print("Inserting {} dataset into database...".format(capsTable_name))
@@ -166,15 +164,6 @@ for tableInsert in InsertsToTables:
                         except mysql.connector.Error as err:
                                         print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
                         else: print("Successfully imported {} data".format(capsTable_name))
-                        # openFile = open(filePath, "r")
-                        # readFile = openFile.read()
-                        # try:
-                        #                 print("Inserting {} dataset into database...".format(capsTable_name))
-                        #                 cursor.execute(readFile)
-                        # except mysql.connector.Error as err:
-                        #                 print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
-                        # else: print("Successfully imported {} data".format(capsTable_name))
-                        # openFile.close()
 
 
 openFile.close()
