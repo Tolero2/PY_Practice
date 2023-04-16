@@ -1,4 +1,3 @@
-from ast import Or
 import os
 import pandas as pd
 import json
@@ -14,7 +13,10 @@ config = {
 cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
+
 DB_NAME = "sample17"
+
+dirPathName = ""#"/ETL-pipeline_py/employeesDB_insertDumps"  #for your directory value if specified outside current directory
 
 def use_DBNAME ():
     #try-catch and initiate the SQL sever to USE the DB_NAME or create a new DB using the create_database function if not DB_NAME does not exist
@@ -26,15 +28,22 @@ def use_DBNAME ():
 ## list out all the names of the metadata files in the given directory.
 def filesPathList ():
         #get a list of all file name from specified path using the listdir funct.
+        dirPath = dirPathName
         currentDir = os.curdir #print current directory (essentially a dot)
-        osPath= os.listdir(path =f"{currentDir}/ETL-pipeline_py/employeesDB_insertDumps")
         DirFileNames=[]
-        for p in osPath:
-                #osPathList= list(p)
-                DirFileNames.append((p))
+        if (dirPath == "" // " "):
+                osPath= os.listdir(path =f"{currentDir}")
+                for p in osPath:
+                        if (p.endswith(".txt")): #check for intended file name(in this case only files ending with text(.txt) format)
+                               DirFileNames.append((p))
+        else:
+                osPath= os.listdir(path =f"{dirPath}")
+                for p in osPath:
+                        if (p.endswith(".txt")): #check for intended file name(in this case only files ending with text(.txt) format)
+                                        DirFileNames.append((p))
 
         return DirFileNames
-
+print(filesPathList())
 use_DBNAME()
 ##Define the a new logic to read files names in a preferred order and preferred files.
 def tableInsertOrder ():
@@ -123,26 +132,29 @@ print(tableInsertOrder())
 # cursor.close()
 # cnx.close()
 
-# InsertsToTables =  tableInsertOrder ()
-# for tableInsert in InsertsToTables:
-#                 fileName = f"{tableInsert}.txt"
-#                 counter = 1
-#                 if (tableInsert == fileName):
-#                         capsTable_name = str(tableInsert).upper()
-#                         filePath= fileName#= f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
-#                         openFile = open(filePath, "r")
-#                         readFile = openFile.read()
-#                         try:
-#                                 print("Inserting {} dataset into database...".format(capsTable_name))
-#                                 cursor.execute(readFile)
-#                         except mysql.connector.Error as err:
-#                                 print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
-#                         else: print("Successfully imported {} data".format(capsTable_name))
-#                         print("Closing {} database connection".format(DB_NAME.upper()))
-# openFile.close()
+InsertsToTables =  tableInsertOrder ()
+for tableInsert in InsertsToTables:
+                fileName = f"{tableInsert}.txt"
+                print(fileName)
+                counter = 1
+                if (tableInsert == fileName):
+                        capsTable_name = tableInsert.upper()
+                        filePath= fileName #f"./ETL-pipeline_py/employeesDB_insertDumps/{fileName}"
+                        # with open(filePath, "rt") as openFile:
+                        #         readFile = openFile.read()
+                        openFile = open(filePath, "r")
+                        readFile = openFile.read()
+                        try:
+                                print("Inserting {} dataset into database...".format(capsTable_name))
+                                cursor.execute(readFile)
+                        except mysql.connector.Error as err:
+                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                        else: print("Successfully imported {} data".format(capsTable_name))
+                        print("Closing {} database connection".format(DB_NAME.upper()))
+                        openFile.close()
 
 
 
 
-# cursor.close()
-# cnx.close()
+cursor.close()
+cnx.close()
