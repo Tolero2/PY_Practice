@@ -1,7 +1,6 @@
 import asyncio
 import os
-from numpy import insert, true_divide
-import pandas as pd
+#import pandas as pd
 import json
 import mysql.connector
 from mysql.connector import errorcode
@@ -16,7 +15,7 @@ cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
 
-DB_NAME = "Sample22"
+DB_NAME = "Sample23"
 
 dirPathName = "./ETL-pipeline_py/employeesDB_insertDumps/test"  #for your directory value if specified outside current directory/ if your script is in the same directory as your files then you can put empty string quotes(""), your current directory will be used.
 
@@ -157,28 +156,29 @@ for tableInsert in InsertsToTables:
                         filePath= f"{dirPath}/{fileName}"
                         openFile = open(filePath, "r")
                         readFile = openFile.read().split(",\n")
-                        chunkCount=(round(len(readFile)/50000))
+                        chunkCount=(round(len(readFile)/30000))
                         rowsCount= 0
-                        chunkList= {}
+                        chunkList=[]
                         for i in range(0, chunkCount, 1):
                                 # with await as asyncio:
-                                chunkValue = readFile[rowsCount : rowsCount + 50000]
+                                chunkValue = readFile[rowsCount : rowsCount + 30000]
                                 fileValues= ",".join(chunkValue)
-                                chunkList = (fileValues)
+                                print(fileValues)
+                                chunkList.append(fileValues)
                                 print(f"chunklist:{len(chunkList)}")
-                                rowsCount = rowsCount+50000
+                                rowsCount = rowsCount+30000
                                 print(rowsCount)
                         for list in chunkList:
                                 try:
                                                         print("Inserting {} dataset into database...".format(capsTable_name))
-                                                        query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val=str(list) )
+                                                        query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val= list )
                                                         cursor.execute (query)
+                                                        cnx.commit()
                                 except mysql.connector.Error as err:
                                                         print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
                                 else: print("Successfully imported {} data".format(capsTable_name))
 
 openFile.close()
 print("Closing {} database connection".format(DB_NAME.upper()))
-cnx.commit()
 cursor.close()
 cnx.close()
