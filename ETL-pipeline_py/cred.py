@@ -24,7 +24,7 @@ cursor = cnx.cursor()
 
 
 ##Define DB name to use or create if it does not exist
-DB_NAME = 'Sample23'
+DB_NAME = 'Sample36'
 
 ## Dict variable to store the list of DB tables and its attributes
 TABLES = {}
