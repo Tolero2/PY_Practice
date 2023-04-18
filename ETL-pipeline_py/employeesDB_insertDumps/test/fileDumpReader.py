@@ -2,6 +2,7 @@ import asyncio
 import os
 #import pandas as pd
 import json
+import multidict
 import mysql.connector
 from mysql.connector import errorcode
 
@@ -15,7 +16,7 @@ cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
 
-DB_NAME = "Sample23"
+DB_NAME = "Sample32"
 
 dirPathName = "./ETL-pipeline_py/employeesDB_insertDumps/test"  #for your directory value if specified outside current directory/ if your script is in the same directory as your files then you can put empty string quotes(""), your current directory will be used.
 
@@ -45,7 +46,6 @@ def filesPathList ():
 
         return DirFileNames
 print(filesPathList())
-use_DBNAME()
 ##Define the a new logic to read files names in a preferred order and preferred files.
 def tableInsertOrder ():
        ##A LOGIC is defined to handle the insert of the dataset into the database in a particular order due to the define constraints on the tables (e.g. the foreign key ON DELETE constraints between table )
@@ -158,27 +158,34 @@ for tableInsert in InsertsToTables:
                         readFile = openFile.read().split(",\n")
                         chunkCount=(round(len(readFile)/30000))
                         rowsCount= 0
-                        chunkList=[]
+                        chunkList={}
+                        valueCounter = 1
                         for i in range(0, chunkCount, 1):
                                 # with await as asyncio:
-                                chunkValue = readFile[rowsCount : rowsCount + 30000]
+                                chunkValue = readFile[rowsCount : (rowsCount + 30000)]
                                 fileValues= ",".join(chunkValue)
-                                print(fileValues)
-                                chunkList.append(fileValues)
-                                print(f"chunklist:{len(chunkList)}")
-                                rowsCount = rowsCount+30000
+                                chunkList[valueCounter] = fileValues
+                                print(f"chunklist:{len(chunkList[valueCounter])}")
+                                rowsCount = rowsCount+30001
                                 print(rowsCount)
-                        for list in chunkList:
-                                try:
-                                                        print("Inserting {} dataset into database...".format(capsTable_name))
-                                                        query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val= list )
-                                                        cursor.execute (query)
-                                                        cnx.commit()
-                                except mysql.connector.Error as err:
-                                                        print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
-                                else: print("Successfully imported {} data".format(capsTable_name))
-
+                                for list in chunkList:
+                                        try:
+                                                                cnx = mysql.connector.connect(**config)
+                                                                cursor = cnx.cursor()
+                                                                use_DBNAME()
+                                                                print("Inserting {} dataset into database...".format(capsTable_name))
+                                                                query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val= chunkList[valueCounter] )
+                                                                cursor.execute (query)
+                                                                cnx.commit()
+                                                                cursor.close()
+                                        except mysql.connector.Error as err:
+                                                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                                        else:
+                                                print("Successfully imported {} data".format(capsTable_name))
+                                                valueCounter = valueCounter+1
+                                cursor.close()
+                                cnx.close()
 openFile.close()
 print("Closing {} database connection".format(DB_NAME.upper()))
-cursor.close()
-cnx.close()
+# cursor.close()
+# cnx.close()
