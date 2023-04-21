@@ -16,7 +16,7 @@ cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
 
-DB_NAME = "Sample32"
+DB_NAME = "Sample33"
 
 dirPathName = "./ETL-pipeline_py/employeesDB_insertDumps/test"  #for your directory value if specified outside current directory/ if your script is in the same directory as your files then you can put empty string quotes(""), your current directory will be used.
 
@@ -161,11 +161,12 @@ for tableInsert in InsertsToTables:
                         chunkList={}
                         valueCounter = 1
                         for i in range(0, chunkCount, 1):
-                                # with await as asyncio:
+                                #with await as asyncio:\
+                                valueCounter = 1
                                 chunkValue = readFile[rowsCount : (rowsCount + 30000)]
                                 fileValues= ",".join(chunkValue)
                                 chunkList[valueCounter] = fileValues
-                                print(f"chunklist:{len(chunkList[valueCounter])}")
+                                print(f"chunklist:{len(chunkList)}")
                                 rowsCount = rowsCount+30001
                                 print(rowsCount)
                                 for list in chunkList:
@@ -183,7 +184,7 @@ for tableInsert in InsertsToTables:
                                         else:
                                                 print("Successfully imported {} data".format(capsTable_name))
                                                 valueCounter = valueCounter+1
-                                cursor.close()
+
                                 cnx.close()
 openFile.close()
 print("Closing {} database connection".format(DB_NAME.upper()))
