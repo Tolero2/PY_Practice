@@ -31,17 +31,17 @@
 ##LOGIC 2
 
 
-filecont = INSERT INTO `employees` VALUES (10001,'1953-09-02','Georgi','Facello','M','1986-06-26'),
-(10002,'1964-06-02','Bezalel','Simmel','F','1985-11-21'),
-(10003,'1959-12-03','Parto','Bamford','M','1986-08-28'),
-(10004,'1954-05-01','Chirstian','Koblick','M','1986-12-01'),
-(10005,'1955-01-21','Kyoichi','Maliniak','M','1989-09-12'),
-(10006,'1953-04-20','Anneke','Preusig','F','1989-06-02'),
-(10007,'1957-05-23','Tzvetan','Zielinski','F','1989-02-10'),
+# filecont = INSERT INTO `employees` VALUES (10001,'1953-09-02','Georgi','Facello','M','1986-06-26'),
+# (10002,'1964-06-02','Bezalel','Simmel','F','1985-11-21'),
+# (10003,'1959-12-03','Parto','Bamford','M','1986-08-28'),
+# (10004,'1954-05-01','Chirstian','Koblick','M','1986-12-01'),
+# (10005,'1955-01-21','Kyoichi','Maliniak','M','1989-09-12'),
+# (10006,'1953-04-20','Anneke','Preusig','F','1989-06-02'),
+# (10007,'1957-05-23','Tzvetan','Zielinski','F','1989-02-10'),
 
-#convert the file content from 
+# #convert the file content from 
 
-"INSERT INTO `employees` VALUES (10001,'1953-09-02','Georgi','Facello','M','1986-06-26'),(10002,'1964-06-02','Bezalel','Simmel','F','1985-11-21'),(10003,'1959-12-03','Parto','Bamford','M','1986-08-28'),(10004,'1954-05-01','Chirstian','Koblick','M','1986-12-01'),(10005,'1955-01-21','Kyoichi','Maliniak','M','1989-09-12'),(10006,'1953-04-20','Anneke','Preusig','F','1989-06-02'),(10007,'1957-05-23','Tzvetan','Zielinski','F','1989-02-10'),(10008,'1958-02-19','Saniya','Kalloufi','M','1994-09-15'),(10009,'1952-04-19','Sumant','Peac','F','1985-02-18');"
+# "INSERT INTO `employees` VALUES (10001,'1953-09-02','Georgi','Facello','M','1986-06-26'),(10002,'1964-06-02','Bezalel','Simmel','F','1985-11-21'),(10003,'1959-12-03','Parto','Bamford','M','1986-08-28'),(10004,'1954-05-01','Chirstian','Koblick','M','1986-12-01'),(10005,'1955-01-21','Kyoichi','Maliniak','M','1989-09-12'),(10006,'1953-04-20','Anneke','Preusig','F','1989-06-02'),(10007,'1957-05-23','Tzvetan','Zielinski','F','1989-02-10'),(10008,'1958-02-19','Saniya','Kalloufi','M','1994-09-15'),(10009,'1952-04-19','Sumant','Peac','F','1985-02-18');"
 
 
 ##LOGIC 3
@@ -89,3 +89,65 @@ filecont = INSERT INTO `employees` VALUES (10001,'1953-09-02','Georgi','Facello'
 #                         else: print("Successfully imported {} data".format(capsTable_name))
 #                         print("Closing {} database connection".format(DB_NAME.upper()))
 #         openFile.close()
+
+
+##LOGIC 4
+
+import os
+import pandas as pd
+#import MySQLdb
+import pymysql as MySQLdb
+from sqlalchemy import create_engine
+
+file = open(file= "/Users/tobijoshuaayotunde/Documents/GitHub/PY_Practice/./ETL-pipeline_py/employeesDB_insertDumps/employees.txt", mode= "r")
+fileContent = file.read().splitlines()
+sqlBulk = list(fileContent)
+attOutput=[]
+for att in sqlBulk:
+        att1 = att.removeprefix("(")
+        att2 = att1.removesuffix("),")
+        att3 = att2.removesuffix(")")
+        att4 = att3.split(",")
+        attOutput.append(att4)
+
+df = pd.DataFrame( attOutput, )
+print(df)
+
+
+config = {
+  'dialect': 'mysql',
+  'driver': 'pymysql',
+  'username': 'root',
+  'password': 'root1234',
+  'host': '127.0.0.1',
+  'database' : 'SAMPLE35'
+  }
+engine = create_engine("mysql+pymysql://root:root1234@127.0.0.1:3306/SAMPLE35")
+
+
+df.to_sql(name="EMPLOYEES", con=engine, index= False, if_exists= "fail")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
