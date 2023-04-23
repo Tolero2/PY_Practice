@@ -93,13 +93,16 @@
 
 ##LOGIC 4
 
+import datetime
 import os
 import pandas as pd
 #import MySQLdb
 import pymysql as MySQLdb
 from sqlalchemy import create_engine
 
-file = open(file= "/Users/tobijoshuaayotunde/Documents/GitHub/PY_Practice/./ETL-pipeline_py/employeesDB_insertDumps/employees.txt", mode= "r")
+DB_NAME= "SAMPLE35"
+tableName= "EMPLOYEES"
+file = open(file= "/Users/tobijoshuaayotunde/Documents/GitHub/PY_Practice/ETL-pipeline_py/employeesDB_insertDumps/employees.txt", mode= "r")
 fileContent = file.read().splitlines()
 sqlBulk = list(fileContent)
 attOutput=[]
@@ -110,24 +113,43 @@ for att in sqlBulk:
         att4 = att3.split(",")
         attOutput.append(att4)
 
-df = pd.DataFrame( attOutput, )
-print(df)
+print(attOutput)
+engine = create_engine("mysql+pymysql://root:root1234@127.0.0.1:3306/SAMPLE35")
+header= pd.read_sql(sql="SELECT * FROM EMPLOYEES", con=engine)
+columns= []
+for arr in header:
+    columns.append(arr)
+# print(columns)
+firstDF = pd.DataFrame( attOutput, columns=columns )
+
+secondDF= pd.DataFrame(columns=columns)
+print(firstDF['emp_no'].conver)
+secondDF['emp_no'] = (firstDF['emp_no'])
+secondDF['birth_date'] = firstDF['birth_date'].
+secondDF['first_name'] = (firstDF['first_name'])
+secondDF['last_name'] = (firstDF['last_name'])
+secondDF['gender'] = (firstDF['gender'])
+secondDF['hire_date'] = datetime.date((firstDF['hire_date']))
+
+val= df.to_csv(path_or_buf="/Users/tobijoshuaayotunde/Documents/GitHub/PY_Practice/ETL-pipeline_py/employeesDB_insertDumps/insertData/{}.csv".format(tableName), mode= "w", index=False ,header=True)
+print(secondDF)
 
 
 config = {
-  'dialect': 'mysql',
-  'driver': 'pymysql',
-  'username': 'root',
+  'user': 'root',
   'password': 'root1234',
   'host': '127.0.0.1',
   'database' : 'SAMPLE35'
   }
-engine = create_engine("mysql+pymysql://root:root1234@127.0.0.1:3306/SAMPLE35")
 
+conn= MySQLdb.connect(**config)
+cursor = conn.cursor()
 
-df.to_sql(name="EMPLOYEES", con=engine, index= False, if_exists= "fail")
-
-
+try:
+       cursor.execute("LOAD DATA INFILE '/Users/tobijoshuaayotunde/Documents/GitHub/PY_Practice/ETL-pipeline_py/employeesDB_insertDumps/insertData/EMPLOYEE.csv'insert into EMPLOYEES ")
+        # df.to_sql(name="EMPLOYEES", con=engine, index=False, if_exists='append')
+except MySQLdb.DatabaseError as err:
+        print("Cannot connect: {}".format(err)) 
 
 
 
