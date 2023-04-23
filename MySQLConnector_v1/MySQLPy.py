@@ -6,18 +6,29 @@ config ={
     'user': input('Enter Username: '),
     'password': getpass(),
 }
+DB_NAME = "online_movie_rating6"
 try:
     with connect(
         **config
     ) as connection:
-       createQuery= "CREATE DATABASE online_movie_rating "
-       with connection.cursor() as cursor: 
-           cursor.execute(createQuery)
+       createDBQuery= "CREATE DATABASE {}".format(DB_NAME)
+       showDBQuery = "SHOW DATABASES"
+       with connection.cursor() as cursor:
+        #cursor.execute(createDBQuery)
+        connection.database= DB_NAME
 except Error as e:
-    print("Cannot connect to DBserver: {}. check input details.".format(e.msg))
+        print("Error: {}. check input details".format(e.msg ))
 else:
     print("Successfully connected to MySQL Sever!")  
-
+finally:
+    with connect(
+        **config
+    ) as connection:
+       showDBQuery = "SHOW DATABASES"
+       with connection.cursor() as cursor:
+        cursor.execute(showDBQuery)
+        for db in cursor:
+             print(db)
 print("Connection closed!")
 
 
