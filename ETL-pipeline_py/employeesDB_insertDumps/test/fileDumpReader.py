@@ -3,8 +3,9 @@ import os
 #import pandas as pd
 import json
 import multidict
-import mysql.connector
-from mysql.connector import errorcode
+import pymysql as MySQLdb
+# import mysql.connector
+# from mysql.connector import errorcode
 
 config = {
   'user': 'root',
@@ -12,9 +13,10 @@ config = {
   'host': '127.0.0.1',
   #'raise_on_warnings': True #FOR DEVELOPER'S USE ONLY
 }
-cnx = mysql.connector.connect(**config)
-cursor = cnx.cursor()
-
+# cnx = mysql.connector.connect(**config)
+# cursor = cnx.cursor()
+conn= MySQLdb.Connection(**config)
+cursor= conn.cursor()
 
 DB_NAME = "Sample33"
 
@@ -149,8 +151,8 @@ for tableInsert in InsertsToTables:
                                         print("Inserting {} dataset into database...".format(capsTable_name))
                                         query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val=fileValues )
                                         cursor.execute (query)
-                        except mysql.connector.Error as err:
-                                        print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                        except MySQLdb.DatabaseError as err:
+                                        print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err))
                         else: print("Successfully imported {} data".format(capsTable_name))
                 else:
                         filePath= f"{dirPath}/{fileName}"
@@ -171,22 +173,19 @@ for tableInsert in InsertsToTables:
                                 print(rowsCount)
                                 for list in chunkList:
                                         try:
-                                                                cnx = mysql.connector.connect(**config)
-                                                                cursor = cnx.cursor()
                                                                 use_DBNAME()
                                                                 print("Inserting {} dataset into database...".format(capsTable_name))
-                                                                query = "INSERT INTO `{table}` VALUES {val};".format(table= tableInsert, val= chunkList[valueCounter] )
-                                                                cursor.execute (query)
-                                                                cnx.commit()
-                                                                cursor.close()
-                                        except mysql.connector.Error as err:
-                                                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err.msg))
+                                                                query = "INSERT INTO `{table}` VALUES ?;".format(table= tableInsert, val= chunkList[valueCounter] )
+                                                                cursor.executemany (query, list)
+                                                                conn.commit()
+                                        except MySQLdb.DatabaseError as err:
+                                                                print("Error inserting data into {table} table: {err}".format(table=capsTable_name, err=err))
                                         else:
                                                 print("Successfully imported {} data".format(capsTable_name))
                                                 valueCounter = valueCounter+1
 
-                                cnx.close()
+                                conn.close()
 openFile.close()
 print("Closing {} database connection".format(DB_NAME.upper()))
-# cursor.close()
+cursor.close()
 # cnx.close()
