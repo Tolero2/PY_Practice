@@ -26,7 +26,8 @@ finally:
        showDBQuery = "SHOW DATABASES"
        with connection.cursor() as cursor:
         cursor.execute(showDBQuery)
-        for db in cursor:
+        result = cursor.fetchall()
+        for db in result:
              print(db)
 
     TABLES = {}
@@ -60,6 +61,7 @@ finally:
        with connect(
         **config
     ) as connection:
+          #create a loop for the insert tables, put the connection into a function; returning cursor/ or csrExc
           createTableQuery= "{}".format("".join(TABLES['movies']))
           with connection.cursor() as cursor:
             connection.database= DB_NAME
