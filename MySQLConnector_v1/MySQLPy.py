@@ -1,15 +1,24 @@
+##Define the packages to use
+#Package 1: password handler module.
 from getpass import getpass
+#Package 2: MysQL db connector module that implement py DB-API 249.
 from mysql.connector import connect, Error
 
+
+##Define the variables for the database implementation.
+
+#config variable holding dict value of the connection strings for connecting to the MySQL DB server// takes Username input and password input through the 'getpass' method.
 config ={
     'host' : '127.0.0.1',
     'user': input('Enter Username: '),
     'password': getpass('Enter password: '),
 }
-DB_NAME = "online_movie_rating10"
 
+#Database name to use or create on if not existing.
+DB_NAME = "online_movie_rating13"
+
+#List of schema tables and 'Create' DDL statement for each schema table stored as a key=>value pair of a dictionary variable (TABLES).
 TABLES = {}
-
 TABLES['movies']= ("""
     CREATE TABLE movies(
     `id` INT NOT NULL AUTO_INCREMENT,
@@ -20,7 +29,6 @@ TABLES['movies']= ("""
     PRIMARY KEY (`id`)
     )
     """)
-
 TABLES['reviewers'] = ("""
     CREATE TABLE reviewers (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,9 +47,14 @@ TABLES['ratings'] = ("""
     )
     """)
 
-  ## Define a DBConn_Exec function Automatic open/close DB connection and execute (MySQL QUERY) passed as a parameter and return the fetch all as the results if any.
+##Database Queries to excute using the DBConn_Exec function.
+useDBQuery= "USE {}".format(DB_NAME)
+createDBQuery= "CREATE DATABASE {}".format(DB_NAME)
+showDBQuery = "SHOW DATABASES"
+createTableQuery = ""
 
-
+#----------------------------------------------------------------------------------------------------------------------------------
+##Define a DBConn_Exec function Automatic open/commit/close DB connection and use the connection cursor to execute (MySQL QUERY) passed as a parameter // returns the cursor fetch all method as the results if any.
 def DBConn_Exec (query):
         with connect(
         **config
@@ -52,13 +65,11 @@ def DBConn_Exec (query):
                 curResults = cursor.fetchall()
                 connection.commit()
                 return curResults
-##Database Queries to excute using the DBConn_Exec function.
 
-useDBQuery= "USE {}".format(DB_NAME)
-createDBQuery= "CREATE DATABASE {}".format(DB_NAME)
+
+##Perform the USE DB and CREATE DB SQL statementS to set/create database (DB_NAME).
 try:
-
-        useDBQuery= "USE {}".format(DB_NAME)
+    #use DB DML query
         with connect(
         **config
         ) as connection:
@@ -66,7 +77,7 @@ try:
                 cursor.execute(useDBQuery)
 except Error as e:
         print("Database Error: {}.\nCreating {} database Now!".format(e.msg, DB_NAME))
-        createDBQuery= "CREATE DATABASE {}".format(DB_NAME)
+    #Create DB DDL query.
         with connect(
         **config
         ) as connection:
@@ -74,41 +85,32 @@ except Error as e:
             with connection.cursor() as cursor:
                 cursor.execute(createDBQuery)
                 print("Database created")
-            #   cursorConn = conn.cursor()
-            #   cursorConn
 else:
-    print("Successfully connected to MySQL sever and database!")
-
+    print("Successfully connected to MySQL sever and {} database!".format(DB_NAME))
 finally:
 
-
+##Perform the create table DDL statement after database (DB_NAME) has been set/created.
     try:
-          #create a loop for the insert tables, put the connection into a function; returning cursor/ or csrExc
-        showDBQuery = "SHOW DATABASES"
-        cursorResults = DBConn_Exec(showDBQuery)
-        # for cursorShowDB in cursorResults:
-        #      for db in cursorShowDB:
-        #         print(db)
-        for cursorShowDB in cursorResults:
-             #for db in cursorShowDB:
+        #Show the available database and create a loop for each table.
+
+        #Show DB query.
+            cursorResults = DBConn_Exec(showDBQuery)
+            for cursorShowDB in cursorResults:
                 print(cursorShowDB)
 
-        #cursor.execute(createTableQuery)
-        for table in TABLES:
-            print("Creating {} table".format(table))
-            createTableQuery= "{}".format(TABLES[f'{table}'])
-            cursorTable = DBConn_Exec(createTableQuery)
-
-
-        #with connection.cursor() as cursor:
-            #connection.database= DB_NAME
-        #cursor.execute(createTableQuery)
+        #Create tables DDL query.
+            for table in TABLES:
+                print("Creating {} table".format(table))
+                tableAtt= TABLES[f'{table}']
+                createTableQuery= "{}".format(tableAtt)
+                cursorTable = DBConn_Exec(createTableQuery)
     except Error as e:
-        print("Error 2: {}. check input details".format(e ))
+        print("Error on Table: {}.\nCheck table DDL details".format(e.msg))
     else:
-        print("Successfully created table ")
+        print("Successfully created tables ")
+
+    # finally:
+    #      try:
+    #           error_reply
 print("Sever connection closed!")
-
-
-#import mySQLConnectPy
 
