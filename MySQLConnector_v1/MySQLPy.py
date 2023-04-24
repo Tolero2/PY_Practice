@@ -152,5 +152,8 @@ try:
 
 except Error as err:
       print("Alter Table Error: {}".format(err.msg))
+finally:
+    print("MySQL Sever connection closed!")
 
-print("Sever connection closed!")
+
+print("MySQL Sever connection closed!")
