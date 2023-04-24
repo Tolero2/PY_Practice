@@ -143,10 +143,14 @@ try:
             print("MODIFY works")
         #MODIFY COLUMN query.
             modifyColumnQuery= (f"{alterTableQuery} {tableName} MODIFY COLUMN {newColumn} ")
+            DBConn_Exec(modifyColumnQuery)
+            print("Successfully modified selected column on {} table".format(tableName))
         elif(add_modify.upper() == 'ADD'):
             print("ADD works")
         #ADD COLUMN query.
             addColumnQuery= (f"{alterTableQuery} {tableName} ADD COLUMN {newColumn} ")
+            DBConn_Exec(addColumnQuery)
+            print("Successfully added new column to {} table".format(tableName))
         else:
             print('Please specify between the ADD or MODIFY operation')
 
