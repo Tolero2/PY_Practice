@@ -242,11 +242,11 @@ def UseDB ():
 
 # #define a function to use the cursor.executemany() method objectively. // the DBConn_Exec function only use the cursor.execute() method.
 # def DBConn_ExecMany(query, recList) :
-     with connect(**config) as connection:
-            connection.database=DB_NAME
-            with connection.cursor() as cursor:
-                cursor.executemany(query, recList)
-                connection.commit()
+#     with connect(**config) as connection:
+#           connection.database=DB_NAME
+#            with connection.cursor() as cursor:
+#                cursor.executemany(query, recList)
+#                connection.commit()
 
 
 # #Reviewers INSERT operation.
@@ -338,9 +338,6 @@ def UseDB ():
 
 # try:
 #     queryResult=DBConn_Exec(selectAllQuery)
-#     # print(f"{queryResult}\n")
-#     # for records in queryResult:
-#     #      print(f"{records}\n")
 # except Error as err:
 #         print("Select error: {}".format(err.msg))
 
@@ -361,44 +358,44 @@ def UseDB ():
 #             print(df)
 
 
-#SELECT specified columns from any specified table with a specified limit of returned rows.
-print("You are viewing all specified columns under the specified table name and the specified number of rows returned.")
-tableNameUser=input('Enter table name: ')
-colNamesUser = input('Enter the column(s) to display( separate each value with (,)): ')
-rowLimit=input('Enter the number of rows to be return: ')
+# #SELECT specified columns from any specified table with a specified limit of returned rows.
+# print("You are viewing all specified columns under the specified table name and the specified number of rows returned.")
+# tableNameUser=input('Enter table name: ')
+# colNamesUser = input('Enter the column(s) to display( separate each value with (,)): ')
+# rowLimit=input('Enter the number of rows to be return: ')
 
-#handling the comma(,) prone User input for column names(colNamesUser)
-if (colNamesUser.endswith(",")):
-        colNameSplit = colNamesUser.removesuffix(",")
-else:
-    colNameSplit =colNamesUser
+# #handling the comma(,) prone User input for column names(colNamesUser)
+# if (colNamesUser.endswith(",")):
+#         colNameSplit = colNamesUser.removesuffix(",")
+# else:
+#     colNameSplit =colNamesUser
 
-selectColumnsQuery="""SELECT {columnsName} FROM `{tableName}` LIMIT {rowLimit}""".format(tableName=str(tableNameUser), columnsName=str(colNameSplit), rowLimit=int(rowLimit))
-print (selectColumnsQuery)
+# selectColumnsQuery="""SELECT {columnsName} FROM `{tableName}` LIMIT {rowLimit}""".format(tableName=str(tableNameUser), columnsName=str(colNameSplit), rowLimit=int(rowLimit))
+# print (selectColumnsQuery)
 
-#try catch operation on the execution of query.
-try:
-    queryResult=DBConn_Exec(selectColumnsQuery)
-except Error as err:
-        print("Select error: {}".format(err.msg))
-        print (selectColumnsQuery)
-else:
-#if SQL query was executed successfully then print.
-    print("MySQL sever connection opened!")
+# #try catch operation on the execution of query.
+# try:
+#     queryResult=DBConn_Exec(selectColumnsQuery)
+# except Error as err:
+#         print("Select error: {}".format(err.msg))
+#         print (selectColumnsQuery)
+# else:
+# #if SQL query was executed successfully then print.
+#     print("MySQL sever connection opened!")
 
-#print the stored query results into a pandas 2x2 DataFrame with specified columns header according to the user specified columns.
-    import pandas as pd
-    #handling the comma(,) prone User input for column names (colNamesUser).
-    if (colNamesUser.endswith(",")):
-        colNameSplit = colNamesUser.removesuffix(",")
-        dfColList = [colNameSplit]
-    else:
-        dfColList =colNamesUser.split(",")
+# #print the stored query results into a pandas 2x2 DataFrame with specified columns header according to the user specified columns.
+#     import pandas as pd
+#     #handling the comma(,) prone User input for column names (colNamesUser).
+#     if (colNamesUser.endswith(",")):
+#         colNameSplit = colNamesUser.removesuffix(",")
+#         dfColList = [colNameSplit]
+#     else:
+#         dfColList =colNamesUser.split(",")
 
-    df =pd.DataFrame(queryResult, columns=dfColList)
-    print(df)
-finally:
-    print("MySQL Sever connection closed!")
+#     df =pd.DataFrame(queryResult, columns=dfColList)
+#     print(df)
+# finally:
+#     print("MySQL Sever connection closed!")
 
 ##______________________________________________________________________________________________________________________________
 ##Perform UPDATE DML statement operations.
@@ -408,7 +405,7 @@ finally:
 movie_id = input("Enter movie id: ")
 reviewer_id = input("Enter reviewer id: ")
 new_rating = input("Enter new rating: ")
-update_query = """
+update_query = ("""
 UPDATE
     ratings
 SET
@@ -420,7 +417,7 @@ SELECT *
 FROM ratings
 WHERE
     movie_id = %s AND reviewer_id = %s
-"""
+""")
 val_tuple = (
     new_rating,
     movie_id,
@@ -431,17 +428,15 @@ val_tuple = (
 
 try:
     with connect(
-        host="localhost",
-        user=input("Enter username: "),
-        password=getpass("Enter password: "),
-        database="online_movie_rating",
+        **config,
+        database=DB_NAME,
     ) as connection:
         with connection.cursor() as cursor:
             for result in cursor.execute(update_query, val_tuple, multi=True):
                 if result.with_rows:
                     print(result.fetchall())
             connection.commit()
-except Error as e:
-    print(e)
+except Error as err:
+    print(err)
 
 print("MySQL Sever connection closed!")
