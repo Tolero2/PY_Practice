@@ -438,5 +438,7 @@ try:
             connection.commit()
 except Error as err:
     print(err)
+finally:
+     print("MySQL Sever connection closed!")
 
 print("MySQL Sever connection closed!")
