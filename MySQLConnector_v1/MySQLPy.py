@@ -342,7 +342,7 @@ def UseDB ():
 #     # for records in queryResult:
 #     #      print(f"{records}\n")
 # except Error as err:
-#         print("Connection error: {}".format(err.msg))
+#         print("Select error: {}".format(err.msg))
 
 # else:
 #     print("MySQL sever connection opened!")
@@ -362,26 +362,40 @@ def UseDB ():
 
 
 #SELECT specified columns from any specified table with a specified limit of returned rows.
-print("You are viewing all columns under the specified table name and specific number of returned rows")
-tableName=input('Enter table name: ')
-colNames = input('Enter the column(s) to display( separate each value with (,)): ')
+print("You are viewing all specified columns under the specified table name and the specified number of rows returned.")
+tableNameUser=input('Enter table name: ')
+colNamesUser = input('Enter the column(s) to display( separate each value with (,)): ')
 rowLimit=input('Enter the number of rows to be return: ')
-selectColumnsQuery="""SELECT {columnsName} FROM `{tableName}` LIMIT {rowLimit}""".format(tableName=tableName, columnsName=colNames, rowLimit=rowLimit)
+
+#handling the comma(,) prone User input for column names(colNamesUser)
+if (colNamesUser.endswith(",")):
+        colNameSplit = colNamesUser.removesuffix(",")
+else:
+    colNameSplit =colNamesUser
+
+selectColumnsQuery="""SELECT {columnsName} FROM `{tableName}` LIMIT {rowLimit}""".format(tableName=str(tableNameUser), columnsName=str(colNameSplit), rowLimit=int(rowLimit))
 print (selectColumnsQuery)
 
 #try catch operation on the execution of query.
 try:
     queryResult=DBConn_Exec(selectColumnsQuery)
 except Error as err:
-        print("Connection error: {}".format(err.msg))
+        print("Select error: {}".format(err.msg))
+        print (selectColumnsQuery)
 else:
-    #if SQL query was executed successfully then print.
+#if SQL query was executed successfully then print.
     print("MySQL sever connection opened!")
 
-#print the stored query results into a pandas 2x2 DataFrame with specified columns header according to the user specified columns
+#print the stored query results into a pandas 2x2 DataFrame with specified columns header according to the user specified columns.
     import pandas as pd
-    colNameSplit = colNames.split(",")
-    df =pd.DataFrame(queryResult, columns=(colNameSplit))
+    #handling the comma(,) prone User input for column names (colNamesUser).
+    if (colNamesUser.endswith(",")):
+        colNameSplit = colNamesUser.removesuffix(",")
+        dfColList = [colNameSplit]
+    else:
+        dfColList =colNamesUser.split(",")
+
+    df =pd.DataFrame(queryResult, columns=dfColList)
     print(df)
 finally:
     print("MySQL Sever connection closed!")
