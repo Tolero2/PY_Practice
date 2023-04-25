@@ -1,6 +1,7 @@
 ##Define the packages to use
 #Package 1: password handler module.
 from getpass import getpass
+from os import error
 
 #Package 2: MysQL db connector module that implement py DB-API 249.
 from mysql.connector import connect, Error
@@ -62,12 +63,14 @@ def DBConn_Exec (query):
         with connect(
         **config
         ) as connection:
-            connection.database= DB_NAME
-            with connection.cursor() as cursor:
-                cursor.execute(query)
-                curResults = cursor.fetchall()
-                connection.commit()
-                return curResults
+                    connection.database= DB_NAME
+                    with connection.cursor() as cursor:
+                        cursor.execute(query)
+                        curResults = cursor.fetchall()
+                        connection.commit()
+                        return curResults
+
+
 #USE DB statement.
 def UseDB ():
      with connect(
@@ -182,8 +185,8 @@ def UseDB ():
 #     print("MySQL Sever connection closed!")
 
 #______________________________________________________________________________________________________________________________
-##Perform INSERT DML statement operation.
-##Perform two cursor execution class (execute/executemany).
+##Perform INSERT DML statement operations.
+##Perform two types of cursor execution operation (execute()/executemany()).
 
 #INSERT DML using cursor.execute() method. // Use execute method when all values will be passed with the single query string.
 
@@ -235,10 +238,10 @@ def UseDB ():
 # finally:
 #    print("MySQL Sever connection closed!")
 
-#INSERT DML using cursor.executemany() method. // Use executemany() method when all values are stored separately as a list variable and will be passed as a tuple with query string. // notice you have to define the values placeholders in the insert queries.
+# #INSERT DML using cursor.executemany() method. // Use executemany() method when all values are stored separately as a list variable and will be passed as a tuple with query string. // notice you have to define the values placeholders in the insert queries.
 
-#define a function to use the cursor.executemany() method objectively. // the DBConn_Exec function only use the cursor.execute() method.
-def DBConn_ExecMany(query, recList) :
+# #define a function to use the cursor.executemany() method objectively. // the DBConn_Exec function only use the cursor.execute() method.
+# def DBConn_ExecMany(query, recList) :
      with connect(**config) as connection:
             connection.database=DB_NAME
             with connection.cursor() as cursor:
@@ -290,38 +293,97 @@ def DBConn_ExecMany(query, recList) :
 
 
 
-#Ratings INSERT operation.
-insertRatingsQuery = """
-INSERT INTO ratings
-(rating, movie_id, reviewer_id)
-VALUES ( %s, %s, %s)
-"""
-ratingsRecords = [
-    (6.4, 17, 5), (5.6, 19, 1), (6.3, 22, 14), (5.1, 21, 17),
-    (5.0, 5, 5), (6.5, 21, 5), (8.5, 30, 13), (9.7, 6, 4),
-    (8.5, 24, 12), (9.9, 14, 9), (8.7, 26, 14), (9.9, 6, 10),
-    (5.1, 30, 6), (5.4, 18, 16), (6.2, 6, 20), (7.3, 21, 19),
-    (8.1, 17, 18), (5.0, 7, 2), (9.8, 23, 3), (8.0, 22, 9),
-    (8.5, 11, 13), (5.0, 5, 11), (5.7, 8, 2), (7.6, 25, 19),
-    (5.2, 18, 15), (9.7, 13, 3), (5.8, 18, 8), (5.8, 30, 15),
-    (8.4, 21, 18), (6.2, 23, 16), (7.0, 10, 18), (9.5, 30, 20),
-    (8.9, 3, 19), (6.4, 12, 2), (7.8, 12, 22), (9.9, 15, 13),
-    (7.5, 20, 17), (9.0, 25, 6), (8.5, 23, 2), (5.3, 30, 17),
-    (6.4, 5, 10), (8.1, 5, 21), (5.7, 22, 1), (6.3, 28, 4),
-    (9.8, 13, 1)
-]
+# #Ratings INSERT operation.
+# insertRatingsQuery = """
+# INSERT INTO ratings
+# (rating, movie_id, reviewer_id)
+# VALUES ( %s, %s, %s)
+# """
+# ratingsRecords = [
+#     (6.4, 17, 5), (5.6, 19, 1), (6.3, 22, 14), (5.1, 21, 17),
+#     (5.0, 5, 5), (6.5, 21, 5), (8.5, 30, 13), (9.7, 6, 4),
+#     (8.5, 24, 12), (9.9, 14, 9), (8.7, 26, 14), (9.9, 6, 10),
+#     (5.1, 30, 6), (5.4, 18, 16), (6.2, 6, 20), (7.3, 21, 19),
+#     (8.1, 17, 18), (5.0, 7, 2), (9.8, 23, 3), (8.0, 22, 9),
+#     (8.5, 11, 13), (5.0, 5, 11), (5.7, 8, 2), (7.6, 25, 19),
+#     (5.2, 18, 15), (9.7, 13, 3), (5.8, 18, 8), (5.8, 30, 15),
+#     (8.4, 21, 18), (6.2, 23, 16), (7.0, 10, 18), (9.5, 30, 20),
+#     (8.9, 3, 19), (6.4, 12, 2), (7.8, 12, 22), (9.9, 15, 13),
+#     (7.5, 20, 17), (9.0, 25, 6), (8.5, 23, 2), (5.3, 30, 17),
+#     (6.4, 5, 10), (8.1, 5, 21), (5.7, 22, 1), (6.3, 28, 4),
+#     (9.8, 13, 1)
+# ]
 
 
-#try to catch any errors for inserting into Ratings table.
+# #try to catch any errors for inserting into Ratings table.
+# try:
+#     DBConn_ExecMany(insertRatingsQuery,ratingsRecords)
+# except Error as err:
+#      print("Insert error: {}".format(err.msg))
+# else:
+#      print("Successfully inserted data in Reviewers table")
+
+# finally:
+#    print("MySQL Sever connection closed!")
+
+
+#______________________________________________________________________________________________________________________________
+##Perform SELECT DML statement operations.
+
+# #SELECT ALL available columns in any given table with a limit of returned rows.
+# print("You are viewing all columns under the specified table name and specific number of returned rows")
+# tableName=input('Enter table name: ')
+# rowLimit=input('Enter the number of rows to be return: ')
+# selectAllQuery="SELECT * FROM {tableName} LIMIT {rowLimit}".format(tableName=tableName, rowLimit=rowLimit)
+
+# try:
+#     queryResult=DBConn_Exec(selectAllQuery)
+#     # print(f"{queryResult}\n")
+#     # for records in queryResult:
+#     #      print(f"{records}\n")
+# except Error as err:
+#         print("Connection error: {}".format(err.msg))
+
+# else:
+#     print("MySQL sever connection opened!")
+
+#     #print the stored query results into a pandas 2x2 DataFrame with defined columns according to the specified table
+#     import pandas as pd
+#     from os import error
+#     if (tableName.upper() == "MOVIES"):
+#             df =pd.DataFrame(queryResult, columns=(  "title", "release_year", "genre", "collection_in_mil"))
+#             print(df)
+#     elif (tableName.upper() == "RATINGS"):
+#             df =pd.DataFrame(queryResult, columns=("rating", "movie_id", "reviewer_id"))
+#             print(df)
+#     elif (tableName.upper() == "REVIEWERS"):
+#             df =pd.DataFrame(queryResult, columns=( "id", "first_name", "last_name"))
+#             print(df)
+
+
+#SELECT specified columns from any specified table with a specified limit of returned rows.
+print("You are viewing all columns under the specified table name and specific number of returned rows")
+tableName=input('Enter table name: ')
+colNames = input('Enter the column(s) to display( separate each value with (,)): ')
+rowLimit=input('Enter the number of rows to be return: ')
+selectColumnsQuery="""SELECT {columnsName} FROM `{tableName}` LIMIT {rowLimit}""".format(tableName=tableName, columnsName=colNames, rowLimit=rowLimit)
+print (selectColumnsQuery)
+
+#try catch operation on the execution of query.
 try:
-    DBConn_ExecMany(insertRatingsQuery,ratingsRecords)
+    queryResult=DBConn_Exec(selectColumnsQuery)
 except Error as err:
-     print("Insert error: {}".format(err.msg))
+        print("Connection error: {}".format(err.msg))
 else:
-     print("Successfully inserted data in Reviewers table")
+    #if SQL query was executed successfully then print.
+    print("MySQL sever connection opened!")
 
+#print the stored query results into a pandas 2x2 DataFrame with specified columns header according to the user specified columns
+    import pandas as pd
+    colNameSplit = colNames.split(",")
+    df =pd.DataFrame(queryResult, columns=(colNameSplit))
+    print(df)
 finally:
-   print("MySQL Sever connection closed!")
-
+    print("MySQL Sever connection closed!")
 
 print("MySQL Sever connection closed!")
