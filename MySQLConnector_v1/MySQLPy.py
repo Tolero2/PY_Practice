@@ -400,7 +400,7 @@ def UseDB ():
 ##______________________________________________________________________________________________________________________________
 ##Perform UPDATE DML statement operations.
 
-#safe parameter handling to prevent SQL injection from User input 
+#safe parameter handling to prevent SQL injection from User input
 
 movie_id = input("Enter movie id: ")
 reviewer_id = input("Enter reviewer id: ")
