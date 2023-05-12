@@ -41,8 +41,9 @@ username_entry.grid(row=1,column=1,pady=30)
 password_entry.grid(row=2,column=1,pady=30)
 login_button.grid(row=4,column=1,pady=20)
 
+#Pack the framed window to mak  it interactive
 frame.pack()
 
 window.mainloop()
-print(username_entry)
-print(passwordVar)
+print(usernameVar.get())
+print(passwordVar.get())
