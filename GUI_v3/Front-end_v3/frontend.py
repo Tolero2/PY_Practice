@@ -5,20 +5,6 @@ from tkinter import *
 from tkinter import messagebox
 #from tkinter.ttk import *
 
-#define logic for the button widget
-def login():
-    sampleUser= "sample"
-    samplePass="sample"
-    if (usernameVar.get()== sampleUser and passwordVar.get()==samplePass):
-        messagebox.showinfo(title="Success",message="Successfully logged in!!!")
-        logStash=f'Success on Login \n Time:  \n User: {sampleUser}'
-        print(logStash)
-
-    else:
-        messagebox.showerror(title="Error",message="Not logged in Da pa da!!!")
-        logStash=f'Error on Login \n Time:   \n User: {usernameVar.get()}'
-        print(logStash)
-
 #create Window object
 window=Tk()
 #All window objects must be declared between those lines (Tk() & mainloop())
@@ -31,7 +17,18 @@ window.configure(bg= "violet")
 #Message inbox takes the return arg and parse in into built-in window to categorize and display the value.
 
 
+def login():
+    sampleUser= "sample"
+    samplePass="sample"
+    if (usernameVar.get()== sampleUser and passwordVar.get()==samplePass):
+        messagebox.showinfo(title="Success",message="Successfully logged in!!!")
+        logStash=f'Success on Login \n Time:  \n User: {sampleUser}'
+        print(logStash)
 
+    else:
+        messagebox.showerror(title="Error",message="Not logged in Da pa da!!!")
+        logStash=f'Error on Login \n Time:   \n User: {usernameVar.get()}'
+     
 
 
 #Create frame to box all widget and grid manager into the pack class. this particularly enable the pack INTERACTIVE WINDOW feature on the app.
