@@ -1,17 +1,42 @@
 #Import evrything from tkinter // import ttk wrapper
-from ast import Str
+from re import I
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 
 #define general Background and Foreground color
 bg="grey"
 fg="#FFFFFF"
 
+
 #Define enter data function that will get executed when the button is clicked,
 def enterData():
+    #User info data
     firstName=firstnameVar.get()
     lastName=lastnameVar.get()
-    print(firstName,lastName)
+    title=title_combobox.get()
+    age=age_spinbox.get()
+    nationality=nationality_combobox.get()
+
+    #User Registration info
+    registrationStatus=registrationVar.get()
+    courses=courses_spinbox.get()
+    semesters=semester_spinbox.get()
+
+    #User Terms and Conditions
+    tANDc=termsConditionVar.get()
+
+    #Business Logic 1 // All User must agree to Terms and Conditions
+    if (tANDc=="Accepted"):
+        if firstName and lastName:
+            print("First Name: {} Last Name: {} Title: {} Age: {}".format(firstName,lastName,title,age))
+            print(registrationStatus)
+            messagebox.showinfo(title="Success",message="Successfully Entered your data")
+        else:
+            messagebox.showwarning(title="Error",message="First Name and Last Name is required")
+    else:
+        messagebox.showwarning(title="Error", message="Please accept the Terms and Conditions to continue")
+
 
 window=Tk()
 window.title("TKINTER DATA ENTRY FORM")
@@ -77,7 +102,8 @@ semester_label=Label(registration_labelFrame,bg=bg,text="# Semesters")
 semester_label.grid(row=0,column=2)
 
 #Check Buttons
-registration_checkbox=Checkbutton(registration_labelFrame,bg=bg,text="Currently Registered")
+registrationVar=StringVar(value="Not Registered")
+registration_checkbox=Checkbutton(registration_labelFrame,bg=bg,text="Currently Registered",variable=registrationVar,onvalue="Registered",offvalue="Not Registered")
 registration_checkbox.grid(row=1,column=0)
 
 #SpinBox
@@ -89,7 +115,8 @@ semester_spinbox.grid(row=1,column=2)
 
 #Terms & Conditions L-frame WIDGETS
 #Check Buttons
-termsConditions_checkbox=Checkbutton(termsConditions_labelFrame,bg=bg,text="I accept the terms and conditions.")
+termsConditionVar=StringVar(value="Not Accepted")
+termsConditions_checkbox=Checkbutton(termsConditions_labelFrame,bg=bg,text="I accept the terms and conditions.",variable=termsConditionVar,onvalue="Accepted",offvalue="Not Accepted")
 termsConditions_checkbox.grid(row=0,column=0)
 
 #Add data button frame WIDGET
